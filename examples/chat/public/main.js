@@ -38,17 +38,34 @@ $(function() {
   // Sets the client's username
   const setUsername = () => {
     username = cleanInput($usernameInput.val().trim());
-
-    // If the username is valid
-    if (username) {
-      $loginPage.fadeOut();
-      $chatPage.show();
-      $loginPage.off('click');
-      $currentInput = $inputMessage.focus();
-
-      // Tell the server your username
-      socket.emit('add user', username);
+    if($.trim(username)==""){
+        alert("Vui lòng nhập username");
+        return;
     }
+    $.ajax({
+       url:'/checkuser/'+username,
+       type:'GET',
+        success: function (data, textStatus, jqXHR) {
+            if($.trim(data)=='OK'){
+                // If the username is valid
+                if (username) {
+                  $loginPage.fadeOut();
+                  $chatPage.show();
+                  $loginPage.off('click');
+                  $currentInput = $inputMessage.focus();
+
+                  // Tell the server your username
+                  socket.emit('add user', username);
+                }
+            }
+            else{
+                window.location='/error';
+            }
+
+        }
+    });
+
+    
   }
 
   // Sends a chat message
