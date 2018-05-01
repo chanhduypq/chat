@@ -107,7 +107,7 @@ $(function() {
     var $messageBodyDiv = $('<span class="messageBody">')
       .text(data.message);
 
-    var typingClass = data.typing ? 'typing' : '';
+    var typingClass = data.typing ? 'typing'+' '+data.username : '';
     var $messageDiv = $('<li class="message"/>')
       .data('username', data.username)
       .addClass(typingClass)
@@ -125,6 +125,7 @@ $(function() {
 
   // Removes the visual chat typing message
   const removeChatTyping = (data) => {
+      $(".message.typing."+data.username).remove();
     getTypingMessages(data).fadeOut(() => {
       $(this).remove();
     });
