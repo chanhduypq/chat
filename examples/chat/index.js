@@ -27,8 +27,7 @@ app.get('/error', function(req, res){
 
 app.get('/checkuser/:username', function(req, res){
   var username = req.params.username;
-  var sql = "SELECT * FROM `member` WHERE account = '" + username + "' AND password = '123456'";
-    pool.query(sql, function(error, result){
+    pool.query("SELECT * FROM `member` WHERE account = ? AND password = ?",[username,'123456'], function(error, result){
         if(result.length === 0 || error) {
             return res.send("error");
         } else {
@@ -57,17 +56,13 @@ io.on('connection', (socket) => {
   // when the client emits 'add user', this listens and executes
   socket.on('add user', (username) => {
     if (addedUser) return;
-    
-    username = ent.encode(username);
         
     if (username === '' ){
         var destination = '/';
         socket.emit('redirect', destination);
     } else{
-         var sql = "SELECT * FROM `member` WHERE account = '" + username + "' AND password = '123456'";
-        pool.query(sql, function(error, result){
+        pool.query("SELECT * FROM `member` WHERE account = ? AND password = ?",[username,'123456'], function(error, result){
             if(result.length === 0 || error) {
-                console.log('loi');
                 var destination = '/error';
                 socket.emit('redirect', destination);
             } else {
